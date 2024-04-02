@@ -27,7 +27,7 @@ def allowed_moves(pos):
     return [[y + 1, x], [y, x + 1], [y - 1, x], [y, x - 1]]
 
 #Establishing whether a move from a reached position is valid, i.e fulfilling border and "non-connecting" conditions
-def valid_move(maze, pos, early_pos, mpos):
+def valid_move(maze, pos, mpos):
     y = pos[0]
     x = pos[1]
     yy = mpos[0] #Row from the top down
@@ -46,10 +46,10 @@ def valid_move(maze, pos, early_pos, mpos):
     return True
 
 #Generating a list of valid moves from a position
-def valid_move_list(maze, pos, early_p):
+def valid_move_list(maze, pos):
     vml = []
     for move in allowed_moves(pos):
-        if valid_move(maze, pos, early_p, move):
+        if valid_move(maze, pos, move):
             vml.append(move)
     return vml
 
@@ -81,8 +81,8 @@ def maze_generate(width, height):
     #making randomly winding passages through the base, one main, leading from the start to the end, and N branches with dead ends
     while True:
                 
-        while len(valid_move_list(maze, p_s, e_p)) > 0:
-            m_list = valid_move_list(maze, p_s, e_p)
+        while len(valid_move_list(maze, p_s)) > 0:
+            m_list = valid_move_list(maze, p_s)
             
             l = len(m_list) - 1
             ind = random.randint(0, l)
