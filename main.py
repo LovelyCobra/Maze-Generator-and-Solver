@@ -1,27 +1,6 @@
 import sys, os, time, random
 import maze_gen as mg
 
-#Helper function to pre-generate a base of a maze of a given width and height
-def maze_generate(width, height):
-    maze = []
-    border = [1 for i in range(width)]
-    top_row = [1, 0]
-    top_row.extend(border)
-    bottom_row = border
-    bottom_row.extend([0, 1])
-    maze.append(top_row)
-    
-    for h in range(height):
-        row = [1]
-        for w in range(width):
-            add = random.randint(0, 1)
-            row.append(add)
-        row.append(1)
-        maze.append(row)
-    maze.append(bottom_row)
-        
-    return maze
-
 #Helper function to visualize the maze
 def maze_visual(maze):
     w = len(maze[0])
