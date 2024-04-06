@@ -1,5 +1,23 @@
-import sys, os, time, random
-import maze_gen as mg
+import os, time, random
+
+#Helper function to visualize the maze
+def maze_visual(maze):
+    w = len(maze[0])
+    h = len(maze)
+    
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print("\nGRAND MINOTAURUS MAZE:\n")
+    for line in range(h):
+        l = ""
+        for posit in range(w):
+            if maze[line][posit] == 0 or maze[line][posit] == 3:
+                l = l + " "
+            elif maze[line][posit] == 1:
+                l = l + "█"
+            else:
+                l = l + "x"
+        print(l)
+    time.sleep(0.02)
 
 #Generating a list of possible moves from a position
 def allowed_moves(pos):
@@ -8,57 +26,101 @@ def allowed_moves(pos):
     
     return [[y + 1, x], [y, x + 1], [y - 1, x], [y, x - 1]]
 
+#Establishing whether a move from a reached position is valid, i.e fulfilling border and "non-connecting" conditions
+def valid_move(maze, pos, mpos):
+    y = pos[0]
+    x = pos[1]
+    yy = mpos[0] #Row from the top down
+    xx = mpos[1] #Position from the left to the right
+    
+    w = len(maze[0])  #Maze width
+    h = len(maze)     #Maze height
+    alm = allowed_moves(mpos)  #Allowed moves from the position of the move
+    alm.remove(pos)            #Removing the reached position from the allowed moves, thus preventing the backward move
+    
+    for m in alm:
+        b = m[0]
+        a = m[1]
+        if b not in range(h) or a not in range(w): #Keeping the created passages away from borders
+            return False
+        if maze[b][a] == 0:         #Preventing a newly created passage to connect to a previously connected passage
+            return False
+    return True
 
-#The main recursive function with backtracking        
-def through_maze(maze, pos, end):
-    w = len(maze[0]) #Maze's width
-    h = len(maze)    #Maze's height
+#Generating a list of valid moves from a position
+def valid_move_list(maze, pos):
+    vml = []
+    for move in allowed_moves(pos):
+        if valid_move(maze, pos, move):
+            vml.append(move)
+    return vml
+
+#THE MAIN FUNCTION generating the maze
+def maze_generate(width, height):
+    maze = []
+    border = [1 for i in range(width)]
+    top_row = [1, 0]
+    top_row.extend(border.copy())
+    bottom_row = border.copy()
+    bottom_row.extend([0, 1])
+    maze.extend([top_row, top_row.copy()])
     
-    #Coordinates within the maze
-    y = pos[0] #Row from the top down
-    x = pos[1] #Position from the left to the right
+    body = [1 for j in range(width + 2)]
     
-    #Base case
-    maze[y][x] = 2
+    #pre-generating the base for the maze, made of only walls at first, and start and end openings
+    for i in range(height - 2):
+        maze.append(body.copy())
+    maze.extend([bottom_row, bottom_row.copy()])
+    maze_visual(maze)
+    time.sleep(0.5)
     
-    if [y + 1, x] == end:
-        maze[y + 1][x] = 2
-        mg.maze_visual(maze)
-        print("\nB I N G O !\nThe maze S O L V E D !!\n")
-        return True
+    #Initial position
+    p_s = [1, 1]
     
-    else:
-        for move in allowed_moves(pos):
-            b = move[0]
-            a = move[1]
-            if maze[b][a] == 0:
-                maze[b][a] = 2
-                mg.maze_visual(maze)
-                if through_maze(maze, [b, a], end):
-                    return True
-                maze[b][a] = 3
-            
-    return False
+    #List of randomly generated passages (placemets of zeros) in the maze (i.e excluding the first and the last one)
+    passages = []
    
-
+    #cutting randomly winding passages through the base
+    while True:
+        while len(valid_move_list(maze, p_s)) > 0:
+            m_list = valid_move_list(maze, p_s)
+            
+            l = len(m_list) - 1
+            ind = random.randint(0, l)
+            move = m_list[ind]
+            y = move[0]
+            x = move[1]
+            maze[y][x] = 0
+            p_s = [y, x]
+            passages.append(p_s)
+            maze_visual(maze)
+        
+        lgth = len(passages)
+        
+        if lgth > height * width * 7 // 12:
+            break
+        index = random.randint(2, lgth - 2)
+        p_s = passages[index]
+        
+    yy = height
+    xx = width-1
+    while maze[yy][xx] == 1:
+        maze[yy][xx] = 0
+        maze_visual(maze)
+        xx -= 1
+        if maze[yy][xx] == 0 or maze[yy][xx-1] == 0:
+            break
+        maze[yy][xx] = 0
+        maze_visual(maze)
+        time.sleep(0.5)
+        yy -= 1
+        
+    return maze
+    
+    
 if __name__ == "__main__":
-    #Width and height without borders; after adding borders the actual width and height is + 2
-    width = 40
-    height = 20
+    #Width and height of the maze, not counting borders all around
+    width = 60
+    height = 40
     
-    start = [0, 1]
-    end = [height + 1, width]
-    
-    m = mg.maze_generate(width, height)
-    time.sleep(1)
-    os.system('cls' if os.name == 'nt' else 'clear')
-    for i in range(4):
-        print("R E A D Y   T O   G O ???")
-        time.sleep(0.5)
-        os.system('cls' if os.name == 'nt' else 'clear')
-        time.sleep(0.5)
-    
-    solved = through_maze(m, start, end)
-    if not solved:
-        print("\nT O U G H   L U C K !\nThe maze is  N O T  solvable. :-(\n")
-    # ▪
+    m = maze_generate(width, height)
