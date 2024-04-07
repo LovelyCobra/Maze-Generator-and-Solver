@@ -1,25 +1,6 @@
 import sys, os, time, random
 import maze_gen as mg
 
-#Helper function to visualize the maze
-def maze_visual(maze):
-    w = len(maze[0])
-    h = len(maze)
-    
-    os.system('cls' if os.name == 'nt' else 'clear')
-    print("\nGRAND MINOTAURUS MAZE:\n")
-    for line in range(h):
-        l = ""
-        for pos in range(w):
-            if maze[line][pos] == 0 or maze[line][pos] == 3:
-                l = l + " "
-            elif maze[line][pos] == 1:
-                l = l + "█"
-            else:
-                l = l + "*"
-        print(l)
-    time.sleep(0.03)
-
 #Generating a list of possible moves from a position
 def allowed_moves(pos):
     y = pos[0] #Row from the top down
@@ -42,7 +23,7 @@ def through_maze(maze, pos, end):
     
     if [y + 1, x] == end:
         maze[y + 1][x] = 2
-        maze_visual(maze)
+        mg.maze_visual(maze)
         print("\nB I N G O !\nThe maze S O L V E D !!\n")
         return True
     
@@ -52,7 +33,7 @@ def through_maze(maze, pos, end):
             a = move[1]
             if maze[b][a] == 0:
                 maze[b][a] = 2
-                maze_visual(maze)
+                mg.maze_visual(maze)
                 if through_maze(maze, [b, a], end):
                     return True
                 maze[b][a] = 3
@@ -61,15 +42,21 @@ def through_maze(maze, pos, end):
    
 
 if __name__ == "__main__":
-    width = 30
+    #Width and height without borders; after adding borders the actual width and height is + 2
+    width = 40
     height = 20
-    
-    
     
     start = [0, 1]
     end = [height + 1, width]
     
     m = mg.maze_generate(width, height)
+    time.sleep(1)
+    os.system('cls' if os.name == 'nt' else 'clear')
+    for i in range(4):
+        print("R E A D Y   T O   G O ???")
+        time.sleep(0.5)
+        os.system('cls' if os.name == 'nt' else 'clear')
+        time.sleep(0.5)
     
     solved = through_maze(m, start, end)
     if not solved:
