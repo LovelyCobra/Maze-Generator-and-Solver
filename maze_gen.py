@@ -114,9 +114,15 @@ def maze_generate(width, height):
         maze_visual(maze)
         time.sleep(0.5)
         yy -= 1
+    
+    with open("maze_container.txt", "a") as file:
+        file.write(str(maze))
+    
+    maze_visual(maze)
+    time.sleep(3)
+    
         
     return maze
-    
     
 if __name__ == "__main__":
     #Width and height of the maze, not counting borders all around
