@@ -130,3 +130,5 @@ if __name__ == "__main__":
     height = 40
     
     m = maze_generate(width, height)
+
+# ▪
