@@ -1,5 +1,28 @@
 import os, time, random
 
+class colors:
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+    END = '\033[0m'
+    
+def ready(height):
+    n = (height - 8) // 2
+    for n in range(4):
+        print("\n")
+        
+    print(colors.CYAN + "██████      ███████      ██      ███████  ██     ██    ███████" + colors.END)
+    print(colors.CYAN + "██    ███   ██         ██  ██    ██    ██  ██   ██    ██     ██" + colors.END)
+    print(colors.CYAN + "██     ███  ██         ██  ██    ██     ██  ██ ██             ██" + colors.END)
+    print(colors.CYAN + "██    ███   █████     ██    ██   ██      ██  █ █          █████" + colors.END)
+    print(colors.CYAN + "██████      ██       ██      ██  ██      ██  ███         ██" + colors.END)
+    print(colors.CYAN + "██  ██      ██       ██████████  ██     ██   ███         ██" + colors.END)
+    print(colors.CYAN + "██   ██     ██      ██        ██ ██    ██    ███" + colors.END)
+    print(colors.CYAN + "██    ███   ███████ ██        ██ ███████     ███         ██" + colors.END)
+    
 #Helper function to visualize the maze
 def maze_visual(maze):
     w = len(maze[0])
@@ -10,10 +33,12 @@ def maze_visual(maze):
     for line in range(h):
         l = ""
         for posit in range(w):
-            if maze[line][posit] == 0 or maze[line][posit] == 3:
+            if maze[line][posit] == 0:
                 l = l + " "
             elif maze[line][posit] == 1:
                 l = l + "█"
+            elif maze[line][posit] == 3:
+                l = l + colors.GREEN + "█" + colors.END
             else:
                 l = l + "x"
         print(l)
@@ -102,24 +127,18 @@ def maze_generate(width, height):
         index = random.randint(2, lgth - 2)
         p_s = passages[index]
         
-    yy = height
-    xx = width-1
-    while maze[yy][xx] == 1:
-        maze[yy][xx] = 0
-        maze_visual(maze)
-        xx -= 1
-        if maze[yy][xx] == 0 or maze[yy][xx-1] == 0:
-            break
-        maze[yy][xx] = 0
-        maze_visual(maze)
-        time.sleep(0.5)
-        yy -= 1
+    j = random.randint(0, 2)
+    if j == 0:
+        maze[height][width-1] = 0
+    elif j == 1:
+        maze[height-1][width] = 0
+    os.system('cls' if os.name == 'nt' else 'clear')
     
     with open("maze_container.txt", "a") as file:
         file.write(str(maze))
     
     maze_visual(maze)
-    time.sleep(3)
+    time.sleep(2)
     
         
     return maze
@@ -130,5 +149,3 @@ if __name__ == "__main__":
     height = 40
     
     m = maze_generate(width, height)
-
-# ▪
