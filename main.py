@@ -1,4 +1,4 @@
-import sys, os, time, random
+import os, time
 import maze_gen as mg
 
 #Generating a list of possible moves from a position
@@ -43,17 +43,19 @@ def through_maze(maze, pos, end):
 
 if __name__ == "__main__":
     #Width and height without borders; after adding borders the actual width and height is + 2
-    width = 40
-    height = 20
+    width = 50
+    height = 30
     
     start = [0, 1]
     end = [height + 1, width]
     
     m = mg.maze_generate(width, height)
+    
+    
     time.sleep(1)
     os.system('cls' if os.name == 'nt' else 'clear')
     for i in range(4):
-        print("R E A D Y   T O   G O ???")
+        mg.ready(height)
         time.sleep(0.5)
         os.system('cls' if os.name == 'nt' else 'clear')
         time.sleep(0.5)
