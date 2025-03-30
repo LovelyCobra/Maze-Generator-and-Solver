@@ -1,8 +1,6 @@
-import os, time, random, re
+import os, time, re
 from maze_generator import *
 from cobraprint import *
-import input_valid as iv
-from input_valid import *
 
 
 #Helper function to visualize the maze
@@ -70,16 +68,9 @@ def through_maze(maze, pos, end):
 if __name__ == '__main__':
     
     os.system('cls' if os.name == 'nt' else 'clear')
-    # statement = f"\nWelcome to {col.MAGENTA}GRAND MINOTAURUS MAZE{col.END}\n\nIf you wish the maze to be generated randomly, type your chosen {col.GREY}width{col.END} and {col.GREY}height{col.END} of the maze \nas {col.GREY}2 positive integers greater than 10 and lesser than the width and the height of your screen \n(recommended size: 35, 20), separated by {col.RED}', '{col.END} \n    and press {col.GREEN}ENTER{col.END}.\n\nOtherwise input your own maze (as a {col.GREY}2D list of zeros and ones{col.GREY}, \nwhere zeros are free passages and ones represent walls){col.END}\n    and only then press {col.GREEN}ENTER{col.END}:\n\n"
-    # regex = "\d+, \d+"
-    # value = (10, 60)
     
     inp = input(f"\nWelcome to {col.MAGENTA}GRAND MINOTAURUS MAZE{col.END}\n\nIf you wish the maze to be generated randomly, type your chosen {col.GREY}width{col.END} and {col.GREY}height{col.END} of the maze \nas {col.GREY}2 positive integers greater than 10 and lesser than the width and the height of your screen \n(recommended size: 35, 20), separated by {col.RED}', '{col.END} \n    and press {col.GREEN}ENTER{col.END}.\n\nOtherwise input your own maze (as a {col.GREY}2D list of zeros and ones{col.GREY}, \nwhere zeros are free passages and ones represent walls){col.END}\n    and only then press {col.GREEN}ENTER{col.END}:\n\n")
     
-    # inp = iv.valid_input(statement, regex, value)
-    
-    # if inp:
-    #     width, height = inp
     if re.search("\d\d, \d\d", inp):
         [width, height] = [int(item) for item in inp.split(', ')]
         maze = maze_generate(width, height)
