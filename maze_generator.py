@@ -125,7 +125,7 @@ def maze_generate(width, height):
     
     
     # Randomly choosing between creating opening above or to the left of the exit passage, or leaving it unconnected. 
-    # This part decides whether the maze is solvable (which is about 60% of the time) or not.
+    # This part decides whether the maze is solvable (which is between a third and half of the time depending on the size of the maze) or not.
     
     j = random.randint(0, 2)
     if j == 0:
